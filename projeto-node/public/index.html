@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Monitoramento de Sensor</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- NOVA: Inclui Highcharts.js via CDN -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
     <style>
         body {
             background-color: #f8f9fa;
@@ -45,6 +47,12 @@
             background-color: #fff;
             border-radius: 8px;
             padding: 20px;
+            margin-bottom: 20px;
+        }
+        /* NOVA: Estilo para o container do gráfico */
+        #container {
+            height: 400px;
+            min-width: 310px;
             margin-bottom: 20px;
         }
     </style>
@@ -98,6 +106,16 @@
             </div>
         </div>
 
+        <!-- NOVA SEÇÃO: Container para o Gráfico de Linha -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="data-container">
+                    <h3>Gráfico em Tempo Real: Fluxo e Volume</h3>
+                    <div id="container"></div> <!-- Aqui vai o gráfico -->
+                </div>
+            </div>
+        </div>
+
         <div class="row mt-4">
             <div class="col-12">
                 <div class="data-container">
@@ -123,6 +141,77 @@
         const connectionStatus = document.getElementById('connectionStatus');
         const serialPortStatus = document.getElementById('serialPortStatus');
         const dataLog = document.getElementById('dataLog');
+
+        // NOVA: Configuração do Gráfico Highcharts
+        let chart; // Referência global para o chart
+        Highcharts.setOptions({
+            lang: {
+                months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                weekdays: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado']
+            }
+        });
+        function createChart() {
+            chart = Highcharts.chart('container', {
+                chart: {
+                    type: 'line',
+                    zoomType: 'x' // Permite zoom no eixo X (tempo)
+                },
+                title: {
+                    text: 'Evolução do Fluxo e Volume ao Longo do Tempo'
+                },
+                xAxis: {
+                    type: 'datetime',
+                    title: {
+                        text: 'Tempo'
+                    },
+                    dateTimeLabelFormats: {
+                        minute: '%H:%M',
+                        hour: '%H:%M'
+                    }
+                },
+                yAxis: [{ // Eixo Y esquerdo para Fluxo
+                    title: {
+                        text: 'Fluxo (L/min)',
+                        style: { color: '#007bff' }
+                    },
+                    labels: { style: { color: '#007bff' } },
+                    opposite: false
+                }, { // Eixo Y direito para Volume
+                    title: {
+                        text: 'Volume (L)',
+                        style: { color: '#28a745' }
+                    },
+                    labels: { style: { color: '#28a745' } },
+                    opposite: true
+                }],
+                tooltip: {
+                    shared: true // Tooltip mostra ambos valores no ponto
+                },
+                legend: {
+                    layout: 'horizontal',
+                    align: 'center',
+                    verticalAlign: 'bottom'
+                },
+                plotOptions: {
+                    series: {
+                        marker: {
+                            enabled: false // Remove marcadores para linha limpa
+                        }
+                    }
+                },
+                series: [{
+                    name: 'Fluxo',
+                    yAxis: 0, // Eixo esquerdo
+                    color: '#007bff',
+                    data: [] // Pontos iniciais vazios
+                }, {
+                    name: 'Volume',
+                    yAxis: 1, // Eixo direito
+                    color: '#28a745',
+                    data: [] // Pontos iniciais vazios
+                }]
+            });
+        }
 
         // Função para atualizar o status da conexão
         function updateConnectionStatus(connected) {
@@ -160,6 +249,8 @@
             console.log('Conectado ao servidor');
             updateConnectionStatus(true);
             addLogEntry('Conectado ao servidor');
+            // NOVA: Inicializa o gráfico após conectar
+            if (!chart) createChart();
         });
 
         socket.on('disconnect', () => {
@@ -168,12 +259,17 @@
             addLogEntry('Desconectado do servidor');
         });
 
+        socket.on('connect_error', (error) => {
+            console.error('Erro na conexão Socket.IO:', error);
+            addLogEntry('Erro na conexão: ' + error.message);
+        });
+
         socket.on('sensorData', (data) => {
-            console.log('Dados recebidos:', data);
+            console.log('Dados recebidos via Socket.IO:', data);
             
-            // Atualiza os valores na interface
-            fluxoValueElement.textContent = data.fluxo.toFixed(2);
-            volumeValueElement.textContent = data.volume.toFixed(2);
+            // Atualiza os valores na interface (com fallback se NaN)
+            fluxoValueElement.textContent = (data.fluxo || 0).toFixed(2);
+            volumeValueElement.textContent = (data.volume || 0).toFixed(2);
             
             // Atualiza o status da porta serial
             serialPortStatus.innerHTML = `
@@ -183,7 +279,30 @@
             `;
             
             // Adiciona entrada no log
-            addLogEntry(`Fluxo: ${data.fluxo.toFixed(2)} L/min, Volume: ${data.volume.toFixed(2)} L`);
+            addLogEntry(`Fluxo: ${(data.fluxo || 0).toFixed(2)} L/min, Volume: ${(data.volume || 0).toFixed(2)} L`);
+
+            // NOVA: Adiciona pontos ao gráfico em tempo real
+            if (chart) {
+                const now = Date.now(); // Timestamp atual em ms
+                const fluxoPoint = [now, data.fluxo || 0];
+                const volumePoint = [now, data.volume || 0];
+
+                // Adiciona ponto à série de Fluxo (shift=true remove o mais antigo se > 100 pontos)
+                chart.series[0].addPoint(fluxoPoint, true, chart.series[0].data.length > 100);
+
+                // Adiciona ponto à série de Volume
+                chart.series[1].addPoint(volumePoint, true, chart.series[1].data.length > 100);
+
+                // Redesenha o gráfico (true = animate)
+                chart.redraw();
+            }
+        });
+
+        // NOVA: Inicializa o gráfico na carga da página (caso já conectado)
+        document.addEventListener('DOMContentLoaded', () => {
+            if (socket.connected) {
+                createChart();
+            }
         });
     </script>
 </body>

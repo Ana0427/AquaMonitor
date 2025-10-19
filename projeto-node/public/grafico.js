@@ -3,21 +3,22 @@ const ctx = document.getElementById('myChart');
   new Chart(ctx, {
     type: 'line',
     data: {
-      labels: ['1h00', '1h30', '2h00', '2h30', '3h00', '3h30'],
+      labels: [''],
       datasets: [{
-        label: '# of Votes',
-        data: [12, 19, 3, 5, 2, 3],
+        label: 'Fluxo de Água (L/min)',
+        data: [ 0 ],
         borderWidth: 1
       }]
     },
     options: {
       scales: {
         y: {
+          beginAtZero: true,
+          suggestedMax: 100
+        },
+        x: {
           beginAtZero: true
         }
       }
     }
   });
-
-  
-  
