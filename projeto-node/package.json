@@ -1,0 +1,39 @@
+{
+  "name": "projeto-node",
+  "version": "1.0.0",
+  "description": "Projeto que monitora o fluxo de água em tempo real exibi de forma clara e intuitiva os dados",
+  "keywords": [
+    "Sensor",
+    "de",
+    "Fluxo",
+    "de",
+    "Água",
+    "monitoramento"
+  ],
+  "homepage": "https://github.com/Ana0427/HydroAlert#readme",
+  "bugs": {
+    "url": "https://github.com/Ana0427/HydroAlert/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ana0427/HydroAlert.git"
+  },
+  "license": "ISC",
+  "author": "Ana Beatriz Elias",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "serialport": "^13.0.0",
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
