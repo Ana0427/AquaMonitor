@@ -1,5 +1,5 @@
-const { SerialPort } = require("serialport");
-const { ReadlineParser } = require("@serialport/parser-readline");
+import { SerialPort } from "serialport";
+import { ReadlineParser } from "@serialport/parser-readline";
 
 let port;
 let sensorData = {
@@ -118,4 +118,4 @@ function initSerialService(io, serialConfig) {
     };
 }
 
-module.exports = { initSerialService };
+export default { initSerialService };

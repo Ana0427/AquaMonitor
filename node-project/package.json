@@ -20,7 +20,7 @@
   },
   "license": "ISC",
   "author": "Ana Beatriz Elias",
-  "type": "commonjs",
+  "type": "module",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

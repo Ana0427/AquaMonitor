@@ -1,19 +1,17 @@
 // importando os módulos necessários
-const express = require('express');
-const http = require('http');
-const socketIO = require('socket.io');
-
-// Importa os módulos SerialPort e ReadlineParser
-const config = require('./config/app');
-const indexRoutes = require('./routes/index');
-const serialService = require('./services/serialService');
+import express from 'express';
+import http from 'http';
+import { Server } from 'socket.io';
+import config from './config/app.js';
+import indexRoutes from './routes/index.js';
+import serialService from './services/serialService.js';
 
 console.log('Iniciando o servidor...');
 
 // Cria uma aplicação Express (servidor web)
 const app = express();
 const server = http.createServer(app); // Cria o servidor HTTP
-const io = socketIO(server); // Passa o servidor para o Socket.IO
+const io = new Server(server); // Passa o servidor para o Socket.IO
 
 app.use(express.static('public')); //arquivos estáticos da pasta 'public'
 

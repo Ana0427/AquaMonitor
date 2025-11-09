@@ -1,10 +1,7 @@
-module.exports = {
-    // Porta do servidor
+export default {
     port: process.env.PORT || 3000,
-
-    // Configurações da porta serial
     serial: {
-        path: 'COM8',
+        path: 'COM5',
         baudRate: 9600,
     }
 };

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AquaMonitor</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style-alert.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+
+</head>
+
+<body>
+
+    <nav class="menu-lateral">
+
+        <div class="btn-expandir">
+            <i class="bi bi-list" id="btn-exp"></i>
+        </div><!--btn-expandir-->
+
+        <ul>
+            <li class="item-menu">
+                <a href="index.html">
+                    <span class="icon"><i class="bi bi-house-door"></i></span>
+                    <span class="txt-link">Home</span>
+                </a>
+            </li>
+            <li class="item-menu">
+                <a href="dashboard.html">
+                    <span class="icon"><i class="bi bi-columns-gap"></i></span>
+                    <span class="txt-link">Dashboard</span>
+                </a>
+            </li>
+            <li class="item-menu ativo">
+                <a href="alertas.html">
+                    <span class="icon"><i class="bi bi-bell-fill"></i></span>
+                    <span class="txt-link">Alertas</span>
+                </a>
+            </li>
+            <li class="item-menu">
+                <a href="dispositivos.html">
+                    <span class="icon"><i class="bi bi-activity"></i></span>
+                    <span class="txt-link">Dispositivos</span>
+                </a>
+            </li>
+        </ul>
+
+    </nav>
+
+    <div class="container">
+        <div class="content-area">
+            <div class="header">
+                <div>
+                    <h1 class="header-title">Central de Alertas</h1>
+                    <p style="color: #718096; margin-top: 8px;">Visualize e gerencie todos os alertas do
+                        sistema</p>
+                </div>
+                <div class="header-actions"> <button class="btn btn-secondary">Marcar todas como
+                        lidas</button> </div>
+            </div>
+            <div class="filters">
+                <div class="filter-chip active">Todos</div>
+                <div class="filter-chip">Avisos</div>
+                <div class="filter-chip">Resolvidos</div>
+            </div>
+            <div class="alerts-list">
+                <div class="alert-card warning">
+                    <div class="alert-icon warning">💧</div>
+                    <div class="alert-content">
+                        <div class="alert-header">
+                            <div>
+                                <div class="alert-title">Sensor de Fluxo 01</div>
+                                <div class="alert-time">Há 23 minutos</div>
+                            </div>
+                        </div>
+                        <div class="alert-description"> O fluxo de água parou </div>
+                        <div class="alert-meta"> <span class="alert-badge badge-warning">AVISO</span> <span
+                                class="alert-source">📡 Sensor Aquário</span> </div>
+                    </div>
+                </div>
+                <div class="alert-card warning">
+                    <div class="alert-icon warning">💧</div>
+                    <div class="alert-content">
+                        <div class="alert-header">
+                            <div>
+                                <div class="alert-title">Sensor de Fluxo 02</div>
+                                <div class="alert-time">Há 2 horas</div>
+                            </div>
+                        </div>
+                        <div class="alert-description"> O fluxo de água parou </div>
+                        <div class="alert-meta"> <span class="alert-badge badge-warning">AVISO</span> <span
+                                class="alert-source">📡 Sensor Lago</span> </div>
+                    </div>
+                </div>
+                <div class="alert-card success">
+                    <div class="alert-icon success">✅</div>
+                    <div class="alert-content">
+                        <div class="alert-header">
+                            <div>
+                                <div class="alert-title">Problema Resolvido</div>
+                                <div class="alert-time">Há 8 horas</div>
+                            </div>
+                        </div>
+                        <div class="alert-description"> O fluxo de água voltou a funcionar normalmente </div>
+                        <div class="alert-meta"> <span class="alert-badge badge-success">RESOLVIDO</span>
+                            <span class="alert-source">📡 Sensor Lago</span> </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/menu.js"></script>
+</body>
+
+</html>

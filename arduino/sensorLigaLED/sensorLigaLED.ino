@@ -76,7 +76,7 @@ void loop() {
     Serial.println();
 
     //controle do LED
-    if (fluxo <= 0.1) {
+    if (fluxo >= 0.1) {
       // sem fluxo → LED aceso
       digitalWrite(PINO_LED, HIGH);
     } else {

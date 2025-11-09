@@ -1,47 +1,297 @@
-body {
-    background-color: #f8f9fa;
-    padding-top: 20px;
-}
-.card {
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    transition: 0.3s;
-    margin-bottom: 20px;
-}
-.card:hover {
-    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-}
-.sensor-value {
-    font-size: 2.5rem;
-    font-weight: bold;
-    text-align: center;
-    margin: 10px 0;
-}
-.sensor-unit {
-    font-size: 1.2rem;
-    color: #6c757d;
-}
-.status-indicator {
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    display: inline-block;
-    margin-right: 8px;
-}
-.status-connected {
-    background-color: #28a745;
-}
-.status-disconnected {
-    background-color: #dc3545;
-}
-.data-container {
-    background-color: #fff;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 20px;
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Outfit', sans-serif;
 }
 
-#container {
-    height: 400px;
-    min-width: 310px;
+
+.body2{
+    height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #52a893 100%);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    max-width: 100%
+}
+
+.menu-lateral{
+    width: 80px; /* ou o tamanho que o menu usa */
+    height: 100vh;
+    background-color: #000000;
+    padding: 40px 0 40px 0;
+    box-shadow: 3px 0 0 #5187de;
+    z-index: 1000;
+    transition: width 0.3s;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    transition: .5s;
+    align-items: center;
+}
+
+.menu-lateral.expandir{
+    width: 230px;
+}
+
+.btn-expandir{
+    width: 100%;
+    padding-left: 26px;
+    height: 60px;
+}
+
+.btn-expandir > i{
+    color: #fff;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+ul{
+    height: 100%;
+    list-style-type: none;
+}
+
+.item-menu{
+    transition: .2s;
+    padding-left: 15px;
+}
+
+.ativo{
+    background-color: #5187de;
+    padding-right: 100px;
+}
+
+.item-menu:hover{
+    background: #5187de;
+    padding-right: 100px;
+}
+
+.item-menu a{
+    color: #fff;
+    text-decoration: none;
+    font-size: 20px;
+    padding: 20px 4%;
+    display: flex;
     margin-bottom: 20px;
+    line-height: 40px;
+
+}
+
+.item-menu a .txt-link{
+    margin-left: 70px;
+    transition: .5s;
+    opacity: 0;
+}
+
+.menu-lateral.expandir .txt-link{
+    margin-left: 40px;
+    opacity: 1;
+}
+
+.item-menu a .icon > i{
+    font-size: 25px;
+    margin-left: 10px;
+}
+
+.container{
+    margin-left: 80px; /* mesmo valor do width do menu */
+    padding: 20px;
+    transition: margin-left 0.3s; 
+}
+
+.menu-lateral.expandir ~ .container {
+  margin-left: 250px;
+}
+
+.header {
+    margin-bottom: 40px;
+    margin-top: 10px;
+}
+
+.header h1 {
+    color: #2d3748;
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.header p {
+    color: #5187de;
+    font-size: 16px;
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin-bottom: 40px;
+    position: relative;
+    margin-left: 0;
+}
+
+.card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    border: 2px solid #e2e8f0;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(135deg, #667eea 0%, #52a893 100%);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(102, 126, 234, 0.2);
+    border-color: #5187de;
+}
+
+.card:hover::before {
+    transform: scaleX(1);
+}
+
+.card-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, #667eea 0%, #52a893 100%);
+    color: white;
+}
+
+.card-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 8px;
+}
+
+.card-description {
+    font-size: 14px;
+    color: #5187de;
+    line-height: 1.6;
+}
+
+.main-content {
+    background: white;
+    border-radius: 16px;
+    padding: 32px;
+    border: 2px solid #e2e8f0;
+}
+
+.tabs {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 32px;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 16px;
+}
+
+.tab {
+    padding: 12px 24px;
+    border-radius: 8px;
+    background: transparent;
+    border: none;
+    font-size: 16px;
+    font-weight: 500;
+    color: #5187de;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tab.active {
+    background: linear-gradient(135deg, #667eea 0%, #52a893 100%);
+    color: white;
+}
+
+.tab:hover:not(.active) {
+    background: #f7fafc;
+    color: #5187de;
+}
+
+.content-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.info-box {
+    padding: 20px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+    border-left: 4px solid #5187de;
+}
+
+.info-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #5187de;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.info-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #5187de;
+}
+
+.status-indicator {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+    animation: pulse 2s infinite;
+}
+
+.status-online {
+    background: #48bb78;
+    box-shadow: 0 0 10px rgba(72, 187, 120, 0.5);
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@media (max-width: 768px) {
+    .menu-lateral{
+        padding: 20px;
+    }
+    .container {
+        padding: 24px;
+    }
+
+    .header h1 {
+        font-size: 24px;
+    }
+
+    .cards-grid {
+        grid-template-columns: 1fr;
+    }
 }
