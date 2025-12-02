@@ -1,11 +1,53 @@
 import { SerialPort } from "serialport";
 import { ReadlineParser } from "@serialport/parser-readline";
 
+import Reading from "../models/readings.js";
+import Alert from "../models/alerts.js";
+
 let port;
 let sensorData = {
   fluxo: 0,
   volume: 0,
 };
+
+// Função para salvar a leitura atual e verificar o alerta de fluxo zero
+async function saveCurrentReadingAndCheckAlert() {
+    const { fluxo, volume } = sensorData; // Obtém os dados atuais
+    try {
+        const newReading = new Reading({// Cria uma nova leitura
+            flowRate: fluxo, 
+            totalVolume: volume,
+        });
+
+        await newReading.save();// Salva a leitura no banco de dados
+        console.log("Leitura agendada salva no banco de dados:", newReading);
+
+        // Lógica de alerta de fluxo zero
+        if (fluxo == 0) {
+            const newAlert = new Alert({
+                alertType: "Fluxo Zero",
+                message: "O fluxo de água está zerado.",
+                value: fluxo,
+            });
+            await newAlert.save();
+            console.log("Alerta de fluxo zero salvo no banco de dados:", newAlert);
+        } 
+
+    } catch (error) {
+        console.error("Erro ao salvar leitura agendada no banco de dados:", error);
+    }
+}
+
+// Função para agendar o salvamento a cada 30 minutos (1800000 ms)
+function scheduleReadingSave() {
+    // Salva a primeira leitura imediatamente (Comentado para evitar timeout na inicialização)
+    // saveCurrentReadingAndCheckAlert(); 
+    
+    // Agenda o salvamento a cada 30 minutos
+    setInterval(saveCurrentReadingAndCheckAlert, 1800000); 
+    console.log("Agendamento de salvamento de leitura a cada 30 minutos iniciado.");
+}
+
 
 function initSerialService(io, serialConfig) {
     try {
@@ -118,4 +160,4 @@ function initSerialService(io, serialConfig) {
     };
 }
 
-export default { initSerialService };
+export default { initSerialService, scheduleReadingSave };

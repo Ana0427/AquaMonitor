@@ -2,6 +2,8 @@
 const fluxoValueElement = document.getElementById('fluxoValue');
 const volumeValueElement = document.getElementById('volumeValue');
 const statusIndicator = document.getElementById('statusIndicator');
+const alertaVisualCard = document.getElementById('alertaVisualCard');
+const alertaStatusText = document.getElementById('alertaStatusText');
 const connectionStatus = document.getElementById('connectionStatus');
 const serialPortStatus = document.getElementById('serialPortStatus');
 const dataLog = document.getElementById('dataLog');
@@ -11,6 +13,28 @@ export function updateSensorValues(fluxo, volume) {
     fluxoValueElement.textContent = (fluxo || 0).toFixed(2);
     volumeValueElement.textContent = (volume || 0).toFixed(2);
 }
+
+export function updateAlertCard(fluxo) {
+    const card = alertaVisualCard.querySelector('.card');
+    const icon = alertaVisualCard.querySelector('i');
+
+    if (fluxo == 0) {
+        // Alerta de Fluxo Zero
+        card.className = 'card card-alerta-zero';
+        card.querySelector('.card-header').className = 'card-header bg-danger text-white';
+        icon.className = 'bi bi-exclamation-triangle-fill';
+        icon.style.color = 'red';
+        alertaStatusText.textContent = 'ALERTA: Fluxo Zero!';
+    } else {
+        // Fluxo Normal
+        card.className = 'card card-alerta-normal';
+        card.querySelector('.card-header').className = 'card-header bg-success text-white';
+        icon.className = 'bi bi-check-circle-fill';
+        icon.style.color = 'green';
+        alertaStatusText.textContent = 'Fluxo Normal';
+    }
+}
+
 
 export function updateConnectionStatus(connected) {
     if (connected) {

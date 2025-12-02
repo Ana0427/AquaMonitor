@@ -1,12 +1,11 @@
-.main-container {
-    display: flex;
-    gap: 20px;
-    max-width: 1400px;
-    width: 100%;
-    background: white;
-    border-radius: 24px;
-    padding: 20px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+.page-title {
+    text-align: center;
+}
+
+.server-connection{
+    background-color: #f6f7f7;
+    border-radius: 8px;
+    padding: 10px 15px;
 }
 
 .content-area {
@@ -127,10 +126,41 @@ svg {
     background-color: #dc3545;
 }
 .data-container {
-    background-color: #fff;
+    background-color: #fafafb;
     border-radius: 8px;
     padding: 20px;
     margin-bottom: 20px;
+}
+
+.data-log {
+    background-color: aliceblue;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;  
+    font-family: monospace;
+    font-size: 14px;
+    color: #333;
+}
+
+.container-fluid {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.fluxo, .volume, .alerta-visual {
+    flex: 1;
+    min-width: fit-content;
+    max-width: 33.33%; /* Ajuste para caber 3 cards */
+    margin: 10px;
+}
+
+.card-body {
+    text-align: center;
 }
 
 #container {
@@ -151,5 +181,32 @@ svg {
     .alert-box {
         position: static;
         margin-top: 20px;
+    }
+}
+
+/* Estilos para o Card de Alerta Visual */
+.card-alerta-normal {
+    border: 2px solid #28a745; /* Verde */
+}
+
+.card-alerta-zero {
+    border: 2px solid #dc3545; /* Vermelho */
+    animation: pulse-red 1s infinite alternate;
+}
+
+.card-alerta-zero .card-header {
+    background-color: #dc3545 !important;
+    border-radius: 5px;
+}
+.card-alerta-zero .card-title {
+    color: #fff !important;
+}
+
+@keyframes pulse-red {
+    0% {
+        box-shadow: 0 0 5px #dc3545, 0 0 10px #dc3545;
+    }
+    100% {
+        box-shadow: 0 0 10px #dc3545, 0 0 20px #dc3545;
     }
 }

@@ -1,10 +1,4 @@
-/*******************************************************************************
-* Sensor de Fluxo D'Agua: Primeiros Passos (v1.0) + LED Indicador
-* 
-* Adaptação: LED acende quando NÃO há fluxo
-*             LED apaga quando HÁ fluxo
-*******************************************************************************/
-
+//Medidor de Fluxo e Volume de Líquidos com Sensor de Fluxo YF-S201
 //definição do pino do sensor e de interrupção
 const int INTERRUPCAO_SENSOR = 0; // interrupt = 0 equivale ao pino digital 2
 const int PINO_SENSOR = 2;

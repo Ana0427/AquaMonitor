@@ -1,0 +1,38 @@
+.page-title { text-align:center;}
+
+.table-responsive {
+    max-height: 400px; /* Define a altura máxima da tabela */
+    overflow-y: auto;  /* Adiciona barra de rolagem vertical se necessário */
+    margin-top: 20px; /* Espaçamento superior */
+}
+
+.data-container { background:#fff; border-radius:10px; box-shadow:0 6px 18px rgba(0,0,0,.06); padding:18px; }
+.chart-box { height: 300px; }
+
+.filters-grid {
+  display:flex; flex-wrap:wrap; gap:12px; align-items:end; margin-bottom:12px;
+}
+.filter-item { flex:1 1 180px; min-width:150px; display:flex; flex-direction:column; gap:6px; }
+.filter-actions { display:flex; gap:8px; align-items:center; }
+
+.form-control { padding:8px 10px; border-radius:6px; border:1px solid #d8dbe0; background:#fff; font-size:14px; }
+
+/* Buttons */
+.btn-primary-sm { background:#0d6efd; color:#fff; border:none; padding:8px 12px; border-radius:6px; cursor:pointer; }
+.btn-outline-sm { background:transparent; color:#333; border:1px solid #cfd6e3; padding:8px 12px; border-radius:6px; cursor:pointer; }
+
+/* Table styles */
+.table-responsive { overflow:auto; }
+.history-table { width:100%; border-collapse:collapse; font-family:system-ui,Segoe UI,Roboto,Arial; }
+.history-table thead th { text-align:left; padding:10px 12px; background:#f6f8fb; color:#556; font-weight:600; border-bottom:1px solid #e9eef8; }
+.history-table tbody td { padding:10px 12px; border-bottom:1px solid #f1f5fb; color:#333; vertical-align:middle; }
+.history-table tbody tr:hover { background:linear-gradient(90deg, rgba(13,110,253,0.03), rgba(13,110,253,0.02)); }
+
+/* Empty row */
+.history-table .empty { text-align:center; color:#888; padding:24px; }
+
+/* Responsive */
+@media (max-width:640px) {
+  .filters-grid { flex-direction:column; }
+  .filter-actions { justify-content:flex-start; }
+}

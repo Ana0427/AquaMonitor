@@ -5,6 +5,13 @@ import { Server } from 'socket.io';
 import config from './config/app.js';
 import indexRoutes from './routes/index.js';
 import serialService from './services/serialService.js';
+import dotenv from 'dotenv';
+import connectDB from './config/database.js';
+
+// Conecta ao banco de dados MongoDB
+connectDB();
+
+dotenv.config(); // Carrega as variáveis de ambiente do arquivo .env
 
 console.log('Iniciando o servidor...');
 
@@ -15,11 +22,18 @@ const io = new Server(server); // Passa o servidor para o Socket.IO
 
 app.use(express.static('public')); //arquivos estáticos da pasta 'public'
 
+// Middleware para parsear JSON e dados de formulário
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 // Monta as rotas
 app.use('/', indexRoutes);
 
 // Inicializa o serviço de comunicação serial com io e config
 serialService.initSerialService(io, config.serial);
+
+// Função para salvar leituras periodicamente
+serialService.scheduleReadingSave();
 
 // Inicia o servidor na porta especificada
 const PORT = config.port; // Usa a porta do ambiente ou 3000

@@ -1,7 +1,25 @@
+Highcharts.setOptions({
+        lang: {
+            months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+            weekdays: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado']
+        },
+        credit: { enabled: false }
+});
+
+// FUNÇÃO: converte Date.now() (UTC) para timestamp que representa o horário local
+function getLocalTimestamp() {
+    const now = new Date();
+    const local = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
+    return local.getTime();
+}
+
 // Variável para armazenar a instância do gráfico
 let chart = null;
 // Configuração inicial do gráfico
 const chartConfig = {
+    credits: {
+        enabled: false
+    },
     chart: { 
         type: 'line',
         zoomType: 'x'
@@ -15,8 +33,9 @@ const chartConfig = {
             text: 'Tempo' 
         },
         dateTimeLabelFormats: { 
-            minute: '%H:%M', 
-            hour: '%H:%M' 
+            second: '%H:%M:%S',
+            minute: '%H:%M',
+            hour: '%H:%M'
         }
     },
     yAxis: [
@@ -27,7 +46,7 @@ const chartConfig = {
             labels: { 
                 style: { color: '#007bff' } 
             }, 
-            opposite: false 
+            opposite: false
         }
     ],
     tooltip: { 
@@ -53,23 +72,16 @@ const chartConfig = {
 export function initChart() {
     if (chart) return chart;
 
-    Highcharts.setOptions({
-        lang: {
-            months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-            weekdays: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado']
-        }
-    });
-
     chart = Highcharts.chart('container', chartConfig);
+    chart.xAxis[0].setExtremes(null, null, true, true);
     return chart;
 }
 
 export function addDataPoint(fluxo) {
     if (!chart) return;
 
-    const now = Date.now();
-    const fluxoPoint = [now, fluxo || 0];
+    const timestamp = getLocalTimestamp(); // ← TIMESTAMP LOCAL!
+    const fluxoPoint = [timestamp, fluxo || 0];
     
-    chart.series[0].addPoint(fluxoPoint, true, chart.series[0].data.length > 100);
-    chart.redraw();
+    chart.series[0].addPoint(fluxoPoint, true, chart.series[0].data.length > 100, true);
 }

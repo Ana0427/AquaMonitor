@@ -22,5 +22,9 @@ export function initSocket(onSensorData) {
         onSensorData.update(data);
     });
 
+    socket.on('alert', (alert) => {
+        addLogEntry(`ALERTA: ${alert.message}`);
+    });
+
     return socket;
 }
