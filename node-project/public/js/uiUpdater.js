@@ -8,10 +8,39 @@ const connectionStatus = document.getElementById('connectionStatus');
 const serialPortStatus = document.getElementById('serialPortStatus');
 const dataLog = document.getElementById('dataLog');
 
+let alertActive = false;
 
 export function updateSensorValues(fluxo, volume) {
     fluxoValueElement.textContent = (fluxo || 0).toFixed(2);
     volumeValueElement.textContent = (volume || 0).toFixed(2);
+}
+
+function sendNotification() {
+    if (!("Notification" in window)) {
+        addLogEntry('Notificações não suportadas neste navegador.');
+        return;
+    }
+    if (Notification.permission !== 'granted') {
+        addLogEntry('Notificação não enviada: permissão não concedida.');
+        return;
+    }
+
+    const title = 'ALERTA: Fluxo Zero';
+    const body = 'Fluxo detectado como 0. Verifique o sistema.';
+    const options = {
+        body,
+        // coloque um caminho válido para ícone se desejar
+        // icon: '/img/favico.png'
+    };
+
+    try {
+        const n = new Notification(title, options);
+        addLogEntry('Notificação enviada: Fluxo Zero');
+        // opcional: foco na janela ao clicar
+        n.onclick = () => window.focus();
+    } catch (err) {
+        addLogEntry('Erro ao criar notificação: ' + err.message);
+    }
 }
 
 export function updateAlertCard(fluxo) {
@@ -25,6 +54,12 @@ export function updateAlertCard(fluxo) {
         icon.className = 'bi bi-exclamation-triangle-fill';
         icon.style.color = 'red';
         alertaStatusText.textContent = 'ALERTA: Fluxo Zero!';
+
+        // envia notificação apenas se ainda não estiver ativa
+        if(!alertActive){
+            sendNotification();
+            alertActive = true;
+        }
     } else {
         // Fluxo Normal
         card.className = 'card card-alerta-normal';
@@ -32,6 +67,9 @@ export function updateAlertCard(fluxo) {
         icon.className = 'bi bi-check-circle-fill';
         icon.style.color = 'green';
         alertaStatusText.textContent = 'Fluxo Normal';
+
+        // reset do estado de alerta
+        alertActive = false;
     }
 }
 
@@ -69,4 +107,13 @@ export function addLogEntry(message) {
     if (dataLog.children.length > 10) {
         dataLog.removeChild(dataLog.lastChild);
     }
+}
+
+// solicita permissão de notificações ao carregar o script (se ainda não decidido)
+if ("Notification" in window && Notification.permission === 'default') {
+    Notification.requestPermission().then(permission => {
+        addLogEntry('Permissão de notificações: ' + permission);
+    }).catch(err => {
+        addLogEntry('Erro ao solicitar permissão de notificações: ' + err?.message);
+    });
 }

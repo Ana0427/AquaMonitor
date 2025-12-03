@@ -10,6 +10,8 @@ let sensorData = {
   volume: 0,
 };
 
+let lastFluxoStatus = null;// Para evitar múltiplos alertas repetidos
+
 // Função para salvar a leitura atual e verificar o alerta de fluxo zero
 async function saveCurrentReadingAndCheckAlert() {
     const { fluxo, volume } = sensorData; // Obtém os dados atuais
@@ -22,20 +24,42 @@ async function saveCurrentReadingAndCheckAlert() {
         await newReading.save();// Salva a leitura no banco de dados
         console.log("Leitura agendada salva no banco de dados:", newReading);
 
-        // Lógica de alerta de fluxo zero
-        if (fluxo == 0) {
-            const newAlert = new Alert({
-                alertType: "Fluxo Zero",
-                message: "O fluxo de água está zerado.",
-                value: fluxo,
-            });
-            await newAlert.save();
-            console.log("Alerta de fluxo zero salvo no banco de dados:", newAlert);
-        } 
-
     } catch (error) {
         console.error("Erro ao salvar leitura agendada no banco de dados:", error);
     }
+}
+
+async function checkFluxoChange(novoFluxo) {
+    const fluxoAtivo = novoFluxo > 0;
+    
+    // Se o estado do fluxo mudou
+    if (lastFluxoStatus !== null && lastFluxoStatus !== fluxoAtivo) {
+        try {
+            if (!fluxoAtivo) {
+                // Fluxo passou de >0 para 0 → ALERTA
+                const newAlert = new Alert({
+                    alertType: "Fluxo Zero",
+                    message: "O fluxo de água caiu para zero.",
+                    value: novoFluxo,
+                });
+                await newAlert.save();
+                console.log("✅ ALERTA: Fluxo zerou!", newAlert);
+            } else {
+                // Fluxo passou de 0 para >0 → NORMALIZADO
+                const newAlert = new Alert({
+                    alertType: "Fluxo Normalizado",
+                    message: "O fluxo de água foi normalizado.",
+                    value: novoFluxo,
+                });
+                await newAlert.save();
+                console.log("✅ ALERTA: Fluxo normalizado!", newAlert);
+            }
+        } catch (error) {
+            console.error("Erro ao salvar alerta de mudança de fluxo:", error);
+        }
+    }
+    
+    lastFluxoStatus = fluxoAtivo; // Atualiza o status
 }
 
 // Função para agendar o salvamento a cada 30 minutos (1800000 ms)
@@ -66,7 +90,7 @@ function initSerialService(io, serialConfig) {
         });
 
         //Evento de dados recebidos
-        parser.on("data", (data) => {
+        parser.on("data", async (data) => {
             const dataTrimmed = data.toString().trim(); // Garante string e remove extras
             console.log("=== DADOS RECEBIDOS (RAW):", JSON.stringify(dataTrimmed)); // Log raw com aspas para ver chars hidden
 
@@ -87,6 +111,9 @@ function initSerialService(io, serialConfig) {
                 sensorData.fluxo = parsedValue;
                 updated = true;
                 console.log("  -> FLUXO ATUALIZADO para:", sensorData.fluxo);
+
+                await checkFluxoChange(parsedValue); // Verifica mudança de fluxo
+
             } else {
                 console.log(
                 "  -> ERRO: Valor FLUXO não é numérico após parse:",

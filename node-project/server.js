@@ -29,6 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 // Monta as rotas
 app.use('/', indexRoutes);
 
+
 // Inicializa o serviço de comunicação serial com io e config
 serialService.initSerialService(io, config.serial);
 

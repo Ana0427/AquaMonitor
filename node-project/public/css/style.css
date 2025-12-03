@@ -58,6 +58,7 @@ ul{
 .item-menu{
     transition: .2s;
     padding-left: 15px;
+    cursor: pointer;
 }
 
 .ativo{

@@ -10,7 +10,7 @@
 
 .content-area {
     flex: 1;
-    margin-left: 55px;
+    margin-left: 25px;
 }
 .content-area-expanded {
     overflow: hidden;
@@ -131,8 +131,12 @@ svg {
     padding: 20px;
     margin-bottom: 20px;
 }
+.data-container h3 {
+    margin-bottom: 15px;
+}
 
 .data-log {
+    margin-top: 10px;
     background-color: aliceblue;
     border: 1px solid #ddd;
     border-radius: 5px;

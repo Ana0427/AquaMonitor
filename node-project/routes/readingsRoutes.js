@@ -15,4 +15,15 @@ router.get('/history', async (req, res) => {
     }
 });
 
+// DELETE: Deletar uma leitura
+router.delete('/:id', async (req, res) => {
+    try {
+        await Reading.findByIdAndDelete(req.params.id);
+        res.json({ message: 'Leitura deletada com sucesso' });
+    } catch (error) {
+        console.error('Erro ao deletar leitura:', error);
+        res.status(500).json({ message: 'Erro ao deletar leitura' });
+    }
+});
+
 export default router;

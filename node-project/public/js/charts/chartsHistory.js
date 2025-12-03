@@ -1,8 +1,13 @@
 // public/js/charts/chartsHistory.js
+Highcharts.setOptions({
+    time: {
+        useUTC: false
+    }
+});
 
 export function initHistoryChart(readings) {
     // Prepara os dados para o Highcharts
-    const timestamps = readings.map(r => new Date(r.timestamp).getTime()).reverse(); // Highcharts usa timestamp em ms
+    const timestamps = readings.map(r => new Date(r.timestamp).getTime()).reverse(); // Converter para timestamp local
     const flowData = readings.map(r => r.flowRate).reverse();
 
     Highcharts.chart('historyChartContainer', {
